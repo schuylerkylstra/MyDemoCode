@@ -1,0 +1,80 @@
+Schuyler Kylstra
+COMP 770
+Programming Assignment 1
+Dinesh Manoucha
+9/22/14
+
+
+INTRODUCTION:
+	This is the PA1 submission for Schuyler Kylstra for Comp 770 Fall 2014. It is a ray tracer
+	that can be switched between aliassing and anti-aliassing. It combines ambient light with
+	specular and diffuse lighting and uses a 2 pixel diameter average of 64 rays for aliassing.
+
+
+
+COMPILATION:
+	The makefile has been supplied. Simply run make in the terminal in the program's folder. This
+	will make 2 different compilations. one that is a debug compatible make and the other which is
+	optimized for speed. To make only the speed optimized version type: "make full" into the
+	terminal.
+
+
+
+RUNNING:
+	To run the program at least one command line input must be declared. To simplify this either
+	run as:  $ ./PA1 alias  
+	Or:  $ ./PA1 antialias
+	To get only the intersections:
+	$ ./PA1 inter
+	All of these commands are case sensative.
+
+
+
+BREAKDOWN:
+	PA1.cpp:
+		I built this file around an OpenGL example I found online. Some of it comes from 
+		the website: http://web.eecs.umich.edu/~sugih/courses/eecs487/glut-howto/sample.c
+		This file initializes the OpenGL window and is where all of the general environment
+		objects get instantiated. More importantly, this is the file where the initial rays
+		for the 512x512 pixel image are generated. These rays along with a struct that 
+		identifies the object that is seen are passed to a camera object that determines
+		the correct color to render. 
+		This file contains the main method.
+
+	visible.h
+		This file contains a skeleton virtual class for all of the visible objects. Each visible
+		structure must be able to return the distance to the camera along a given ray, the surface
+		characteristics and the normal vector at a specific location.
+
+	sphere.h
+		This file contains the sphere class. The sphere is defiend by a point, a radius, and a
+		surface.
+		#
+		A subclass of visible.
+
+	plane.h
+		This contains the plane class object. It is defined by a point, a normal, and a surface.
+		#
+		A subclass of visible.
+
+	lightSource.h
+		This contains the lightSource class. It is not a sub-class of visible so lightrays can
+		pass straight through it.
+
+	camera.h
+		This is the camera class. It has a view point, a focal distance, a focal plane, and direction.
+		This class determines the object that is seen along a certain ray, the color value along a 
+		given ray.It calculates diferently if the scene is aliassed or anti-aliassed. I have tried to 
+		write the class so it can be modified in the future to handle an arbitrary direction and an
+		arbitrary "up" direction for the image plane.
+		#
+		The camera loops through an array of "visible" pointers and finds the closest visible. That is 
+		the object that is actuall visible.
+
+	structures.h
+		This file contains all of my struct objects. I defined a 3-float tuple, a 3-float vector, a
+		4-float color struct, a ray, a surface struct, and a 2-tuple with a float and an int that I
+		name a "seenPair". The seenPair is used by the camera class to keep track of which object a
+		ray intersects. 
+
+
