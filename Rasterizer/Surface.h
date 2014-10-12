@@ -14,6 +14,8 @@
 #ifndef SURFACE
 #define SURFACE
 
+#import <math.h>
+
 struct RGB_Color
 {
 	float RGB[3];
@@ -52,45 +54,48 @@ struct RGB_Color
 
 
 
-	void operator+(RGB_Color c)
+	RGB_Color operator+(RGB_Color c)
 	{
-		for (int i = 0; i < 3; ++i)
-		{
-			RGB[i]+= c.RGB[i];
-		}
+		return RGB_Color(RGB[0] + c.RGB[0], RGB[1] + c.RGB[1], RGB[2] + c.RGB[2]);
 	}
 
 
 
-	void operator/(float div)
+	RGB_Color operator-(RGB_Color c)
 	{
-		if(div>0)
-		{
-			RGB[0]/=div;
-			RGB[1]/=div;
-			RGB[2]/=div;
-		}
+		return RGB_Color(RGB[0] - c.RGB[0], RGB[1] - c.RGB[1], RGB[2] - c.RGB[2]);
 	}
 
 
 
-	void operator*(float c)
+	RGB_Color operator/(float divisor)
+	{
+		
+		if(divisor>0)
+		{
+			divisor = 1.0/divisor;
+			return RGB_Color(RGB[0]*divisor, RGB[1]*divisor, RGB[2]*divisor);
+		}
+		return *this;
+	}
+
+
+
+	RGB_Color operator*(float c)
 	{
 		if(c>=0)
 		{
-			RGB[0]*=c;
-			RGB[1]*=c;
-			RGB[2]*=c;
+			return RGB_Color(RGB[0]*c, RGB[1]*c, RGB[2]*c);
 		}
-
+		return *this;
 	}
 
-	void gammaCorrect(float c)
+	void gammaCorrect()
 	{
 		// c = 1/c;
-		for (int i = 0; i < 4; ++i)
+		for (int i = 0; i < 3; ++i)
 		{
-			RGB[i] = pow(RGB[i], c);
+			RGB[i] = pow(RGB[i], .454545);
 		}
 	}
 
@@ -108,7 +113,7 @@ struct RGB_Color
 
 	void print()
 	{
-		printf("CHECK2 %f, %f, %f\n",RGBA[0],RGBA[1],RGBA[2] );
+		printf("CHECK2 %f, %f, %f\n",RGB[0],RGB[1],RGB[2] );
 	}
 };
 
@@ -119,14 +124,12 @@ struct Surface
 {
 
 	RGB_Color ambientColor;
-
 	RGB_Color diffuseColor;
-
 	RGB_Color specularColor;
 	int specularPower;
 
 
-	surface()
+	Surface()
 	{
 		specularPower = 0;
 		ambientColor = RGB_Color(1.0, 1.0, 1.0);
@@ -136,7 +139,7 @@ struct Surface
 	}
 
 
-	surface(RGB_Color amColor, RGB_Color difColor, RGB_Color speColor, int spPo)
+	Surface(RGB_Color amColor, RGB_Color difColor, RGB_Color speColor, int spPo)
 	{
 		ambientColor = amColor;
 		diffuseColor = difColor;
@@ -145,17 +148,15 @@ struct Surface
 	}
 
 
-	~surface()
+	~Surface()
 	{
 
 	}
 
-
-	//NEVER USE THIS
-	float * getRGBColor()
+	RGB_Color getRGBColor(float nDotL, float nDotH)
 	{
-		RGB_Color c = ambientColor + diffuseColor + specularColor;
-		return c.getRGBColor();
+		RGB_Color c = ambientColor + diffuseColor*fmax(0.0, nDotL) + specularColor*pow(fmax(0.0, nDotH), specularPower);
+		return c;
 	}
 
 	float * getAmColor()

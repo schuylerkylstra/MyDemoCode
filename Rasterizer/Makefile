@@ -1,7 +1,7 @@
 CC = g++ -g
 
 CC_DEBUG = @$(CC) -D_DEBUG
-CC_RELEASE = @$(CC) -O3 -DNDEBUG
+CC_RELEASE = @$(CC) -DNDEBUG
 
 FRAMEWORK = -framework GLUT -framework OpenGL
 
