@@ -22,6 +22,7 @@ COMPILATION:
 
 RUNNING:
 	To run the program simply type ./PA2 into the command line. This will render via flat shading.
+	
 	Shading options:
 		Flat:  	
 				$ ./PA2   
@@ -34,6 +35,7 @@ RUNNING:
 
 
 BREAKDOWN:
+
 	PA2.cpp:
 		I built this file around an OpenGL example I found online that I also used in PA1.
 		It comes from the website: http://web.eecs.umich.edu/~sugih/courses/eecs487/glut-howto/sample.c
